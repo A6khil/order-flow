@@ -6,9 +6,8 @@ import { UiIconProvider } from '@/assets/svg';
 import { installUiTooltips } from '@/lib/uiTooltips';
 import { loadUnderlyings } from './lib/underlyings';
 import { dismissBootSplash, settleWithin } from './lib/bootstrap';
-// The board's faces: Geist for words, Geist Mono for figures (see ui-typography.css).
-import '@fontsource-variable/geist';
-import '@fontsource-variable/geist-mono';
+// The board's face: Manrope, words and figures alike (see ui-typography.css).
+import '@fontsource-variable/manrope';
 import '@/styles/oi-design-tokens.css';
 import '@/styles/index.css';
 import '@/styles/strike-filter.css';
@@ -84,8 +83,8 @@ import '@/styles/ui-finish-pass.css';
 import '@/styles/ui-box-system.css';
 import '@/styles/ui-tooltip.css';
 
-// The theme: the reader's saved choice, else the system's (light or dark).
-let theme: 'light' | 'dark' = window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+// The theme: the reader's saved choice, else light.
+let theme: 'light' | 'dark' = 'light';
 try {
   const saved = localStorage.getItem('preferredTheme');
   if (saved === 'light' || saved === 'dark') theme = saved;

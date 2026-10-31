@@ -159,9 +159,9 @@
 /* =============================================================================
    5. Finishing layer — edges, glow, shared controls, two-font discipline.
    Additive only: tokens below are NEW names (no authority token is redefined),
-   a resting card keeps no drop shadow (§1.2). Geist is reserved for page
+   a resting card keeps no drop shadow (§1.2). Manrope is reserved for page
    titles, hero figures, empty/error-state titles and panel/modal titles;
-   everything else is Geist.
+   everything else is Manrope.
    ========================================================================== */
 :root {
   --edge-highlight: inset 0 1px 0 color-mix(in srgb, var(--text) 6%, transparent);

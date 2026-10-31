@@ -1,4 +1,4 @@
-/* No remote font import. The type system is Geist / Geist, both
+/* No remote font import. The type system is Manrope / Manrope, both
    self-hosted from /fonts via ui-typography.css, and no rule in the app asks
    for Inter. The Google Fonts @import that used to sit here was also blocked in
    production on every page load — `style-src 'self' 'unsafe-inline'` and

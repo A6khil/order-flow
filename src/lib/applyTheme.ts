@@ -15,9 +15,9 @@ export function getTheme(): ThemeMode {
   return document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
 }
 
-/** The theme as the user last chose it (boot default: dark). */
+/** The theme as the user last chose it (boot default: light). */
 export function readStoredTheme(): ThemeMode {
-  try { return localStorage.getItem('preferredTheme') === 'light' ? 'light' : 'dark'; } catch { return 'dark'; }
+  try { return localStorage.getItem('preferredTheme') === 'dark' ? 'dark' : 'light'; } catch { return 'light'; }
 }
 
 /** useSyncExternalStore subscribe: only the few components that draw the theme re-render. */

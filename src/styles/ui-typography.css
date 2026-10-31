@@ -1,9 +1,10 @@
 :root {
-  /* Market Flow reads in Geist: crisp at 10–12px, with true tabular figures.
-     Geist stays as the fallback for anything Geist does not cover (₹). */
-  --font-display: "Geist Variable", system-ui, sans-serif;
-  --font-sans: "Geist Variable", system-ui, sans-serif;
-  --font-figures: "Geist Mono Variable", "Geist Variable", ui-monospace, monospace;
+  /* Order Flow reads in Manrope (bundled, OFL): clear at 10–12px, with tabular
+     figures, so columns of moves line up without a code-style face. The
+     system face covers anything Manrope does not (₹). */
+  --font-display: "Manrope Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-sans: "Manrope Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-figures: var(--font-sans);
 
   /* Canonical the app Typography Font Size Scale */
   --font-size-micro: 10px;
@@ -16,7 +17,7 @@
   --font-size-h2: 32px;
   --font-size-h1: 44px;
 
-  /* Legacy aliases intentionally resolve to Geist. Numeric alignment is
+  /* Legacy aliases intentionally resolve to Manrope. Numeric alignment is
      retained with tabular figures rather than a third monospace face. */
   --font-ui: var(--font-sans);
   --font-mono: var(--font-sans);
@@ -42,8 +43,8 @@ table {
   font-family: var(--font-sans) !important;
 }
 
-/* Geist is reserved for true display hierarchy. Dense dashboard section
-   labels continue to use Geist at their existing sizes. */
+/* Manrope is reserved for true display hierarchy. Dense dashboard section
+   labels continue to use Manrope at their existing sizes. */
 h1,
 h2,
 [data-ui-type="display"] {

@@ -58,7 +58,7 @@
 
 
 /* ── 7. Type system stays inside the family it ships ─────────────────────────
-   Geist loads exactly four faces: 400, 500, 600 and 700. Anything heavier
+   Manrope loads exactly four faces: 400, 500, 600 and 700. Anything heavier
    is remapped by the browser, so `font-weight: 700` rendered identically to
    700 while telling every future reader a black weight existed. The declared
    values were normalised to the four real ones; b/strong are the last holdout

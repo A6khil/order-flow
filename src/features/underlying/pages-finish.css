@@ -9,7 +9,7 @@
      material   bg -> surface -> surface-raised; SELECTED = neutral ink plate
      motion     120/180/240ms ios easing; hover warms toward the accent;
                 pressed = press-wash + scale(.97); focus = double ring
-     type       Geist + tabular numerals; Season only for hero moments
+     type       Manrope + tabular numerals; Season only for hero moments
      rhythm     4/8 grid, heights 28/32/36/44, contrast from token pairs        */
 
 .app {

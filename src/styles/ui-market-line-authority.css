@@ -235,7 +235,7 @@
 
 :root[data-theme] body #root > .app.app[data-active-tab='chain']
 .chain-table tr.spot-divider-row .oc-spot-price {
-  /* 650 was not a loaded face. Geist ships 400/500/600/700, so the browser
+  /* 650 was not a loaded face. Manrope ships 400/500/600/700, so the browser
      already resolved 650 upward to 700 — same pixels, stated honestly. */
   font-weight: 700 !important;
   color: inherit !important;

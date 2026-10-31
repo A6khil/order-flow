@@ -524,8 +524,8 @@
 }
 
 /* ── FINISH PASS ─────────────────────────────────────────────────────────
- * The current page title is the bar's one display moment (Geist, as
- * the guides' headings); everything else stays Geist. Actions share the
+ * The current page title is the bar's one display moment (Manrope, as
+ * the guides' headings); everything else stays Manrope. Actions share the
  * pill radius and neutral edges of the top bar. Visual only. */
 .ui-pagebar .ui-pagebar__crumbs .ui-pagebar__current {
   font-family: var(--font-display, var(--font-sans));

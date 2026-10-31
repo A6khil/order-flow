@@ -8,11 +8,11 @@ By **[Mr. Chartist](https://mrchartist.com)** · [X](https://x.com/Mr_Chartist) 
 
 A live board of the Indian F&O market. Every underlying is read from its future: the bulls rise above the zero line, the bears fall below it, the whole market squeezes through two tunnels and fans out to a card for each name. Open it at any hour: two real recorded sessions and a simulated market keep it moving with no keys, and any broker's API can be plugged in behind it.
 
-![Order Flow replaying Friday 30 Oct 2026, dark theme](docs/order-flow-dark.webp)
+![Order Flow replaying Friday 30 Oct 2026](docs/order-flow-light.webp)
 
 <table>
   <tr>
-    <td width="66%"><img src="docs/order-flow-light.webp" alt="Order Flow, light theme"></td>
+    <td width="66%"><img src="docs/order-flow-dark.webp" alt="Order Flow, dark theme"></td>
     <td width="34%"><img src="docs/order-flow-phone.webp" alt="Order Flow on a phone"></td>
   </tr>
 </table>
@@ -81,7 +81,7 @@ Pick how far you want to go. Each step stands on its own.
 | **Big cards** | The same names in full: the move, the futures price, conviction (how many checks hold), support, resistance and the zone where open interest was added, with 5-minute candles. |
 | **Hover / click** | Hover any tile, card or line to light its path and open its detail; click to pin it. |
 | **Nifty 50 / All F&O** | The universe: the NIFTY 50 constituents (`src/features/market-flow/nifty50.ts`) or all ~217 F&O underlyings. Remembered per browser. |
-| **Theme switch** | Light or dark. The first visit follows the system setting. |
+| **Theme switch** | White (the default) or dark; your choice is remembered. |
 
 Build-up, from a future's price and open interest together:
 
@@ -204,7 +204,7 @@ Pull requests are welcome, especially adapters for more brokers. Read [CONTRIBUT
 
 Company marks in `public/brand/underlyings/` come from Wikimedia Commons (freely licensed or below the threshold of originality) and, where Commons has none, from each company's own website icon (`scripts/fetch-site-icons.mjs`). Every mark was reviewed by eye; names without a confident match show a two-letter monogram instead. Marks are trademarks of their owners, shown only to identify the instrument, and are not covered by the Order Flow licence.
 
-The interface is set in Geist and Geist Mono (SIL Open Font License), bundled with the page. Details in [NOTICE.md](NOTICE.md).
+The interface is set in Manrope (SIL Open Font License), bundled with the page. Details in [NOTICE.md](NOTICE.md).
 
 ## Disclaimer
 

@@ -10,7 +10,7 @@
  * Simple and Advanced, Call, Put and Call + Put alike.
  *
  * What it does not do: change a label, a figure, a format, a colour or a
- * formula. Type stays Geist, tabular, never under 10px. Row height and
+ * formula. Type stays Manrope, tabular, never under 10px. Row height and
  * the 44px side-switch targets are untouched.
  *
  * Scope: `.chain-table` at <=768px, same specificity prefix as the sheets it
@@ -57,7 +57,7 @@
     min-width: 0;
   }
 
-  /* Figures: tabular Geist at 12px (>= the 10px floor), centred in the
+  /* Figures: tabular Manrope at 12px (>= the 10px floor), centred in the
      squeezed track. */
   :root[data-theme] body #root > .app.app[data-active-tab='chain']
     .chain-table .chain-row td.val-cell {
