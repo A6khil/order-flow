@@ -1,12 +1,28 @@
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/brand/order-flow-icon-dark.svg">
+  <img src="docs/brand/order-flow-icon-light.svg" alt="Order Flow logo" width="96" height="96">
+</picture>
+
 # Order Flow
+
+### See where the money is flowing across Indian F&O, live.
+
+Every NSE and BSE F&O underlying, read from its future, on one board.<br>
+Bulls rise above the zero line, bears fall below it, and every name runs on its own path to a card.
 
 [![CI](https://github.com/MrChartist/order-flow/actions/workflows/ci.yml/badge.svg)](https://github.com/MrChartist/order-flow/actions/workflows/ci.yml)
 [![License: PolyForm Noncommercial](https://img.shields.io/badge/license-PolyForm%20Noncommercial-16d98a.svg)](LICENSE)
 ![Node 22.18+](https://img.shields.io/badge/node-%E2%89%A522.18-informational.svg)
+![No keys needed](https://img.shields.io/badge/keys-none%20needed-000000.svg)
+![217 underlyings](https://img.shields.io/badge/F%26O%20underlyings-217-22A34A.svg)
 
-By **[Mr. Chartist](https://mrchartist.com)** · [X](https://x.com/Mr_Chartist) · [YouTube](https://www.youtube.com/mr_chartist) · [Instagram](https://instagram.com/mrchartist) · [LinkedIn](https://www.linkedin.com/in/rohit-mrchartist/) · [GitHub](https://github.com/MrChartist)
+**[Quick start](#quick-start)** · **[What you get](#what-you-get)** · **[Real NSE data](#the-nse-archive-real-sessions-with-no-keys)** · **[Connect any API](#connect-any-api)** · **[Guide on mrchartist.com](https://mrchartist.com/open-source/order-flow)**
 
-A live board of the Indian F&O market. Every underlying is read from its future: the bulls rise above the zero line, the bears fall below it, the whole market squeezes through two tunnels and fans out to a card for each name. Open it at any hour: real sessions from the exchanges' own archive, two recorded sessions and a simulated market keep it moving with no keys, and any API can be plugged in behind it with a few settings.
+</div>
+
+<br>
 
 ![Order Flow replaying Friday 6 Nov 2026 from the NSE archive](docs/order-flow-light.webp)
 
@@ -17,33 +33,89 @@ A live board of the Indian F&O market. Every underlying is read from its future:
   </tr>
 </table>
 
-![A pinned stock: 5-minute candles, support and resistance, the open-interest zone and why it ranks where it does](docs/order-flow-detail.webp)
+<sub>Real screenshots: the NSE archive session of Friday 6 Nov 2026, replayed with `npm run dev:archive`.</sub>
 
-<sub>Screenshots: the NSE archive session of 6 Nov 2026 (`npm run dev:archive`).</sub>
+## Why Order Flow
 
-**Contents:** [Quick start](#quick-start) · [Your to-do list](#your-to-do-list) · [Reading the board](#reading-the-board) · [Data](#data) · [Connect any API](#connect-any-api) · [Configuration](#configuration) · [Server API](#server-api) · [Security](#security) · [Development](#development) · [Project layout](#project-layout) · [Contributing](#contributing) · [License](#license) · [About](#about)
+An option chain shows you one stock. A heatmap shows you a colour. **Order Flow shows you the whole F&O market moving at once,** and tells you *why* each name stands where it does.
+
+- **The whole market in one picture.** About 217 underlyings, each drawn from 0% at the open. The biggest movers are named; the rest form the crowd you can read at a glance.
+- **Futures, not just price.** Price and open interest together give every name its build-up: long build-up, short covering, short build-up or long unwinding.
+- **Where option writers stand.** Open interest by strike gives each name its support, its resistance and the zone where fresh positions were added.
+- **A reason for every rank.** Pin any stock and see five checks of conviction: positions opened with the move, spot agrees, the last hour agrees, option writers lean the same way, the sector agrees.
+- **Real data, no keys, any hour.** Build a session from NSE's own archive in one command, replay two recorded days, or run the simulated market. Plug in your own feed when you are ready.
+- **Yours, on your computer.** A private server that only your machine can reach, an open codebase you can read, change and extend.
 
 ## Quick start
 
 ```bash
+git clone https://github.com/MrChartist/order-flow.git
+cd order-flow
 npm install
-npm run dev:archive      # a real session from the NSE and BSE archive (6 Nov 2026), replayed live
-# or
-npm run dev:recorded     # a real session recorded minute by minute (30 Oct 2026)
-# or
-npm run dev              # the simulated demo market
+npm run dev:archive      # a real NSE + BSE session (6 Nov 2026), replayed live
 ```
 
-Fetch the latest session from the exchanges' archive at any time with `npm run fetch:nse` (no keys).
+Open **http://127.0.0.1:5195**. That is it: no account, no keys, no broker. Requires Node 22.18 or newer.
 
-Open http://127.0.0.1:5195. This starts the server on port 8787 and the page on 5195. No keys or accounts are needed. Requires Node 22.18 or newer.
+| Want | Run |
+|---|---|
+| The latest real session from the exchanges' archive | `npm run fetch:nse`, then `npm run dev:archive` |
+| A real day recorded minute by minute (30 Oct 2026) | `npm run dev:recorded` |
+| The simulated market (always moving, priced near real levels) | `npm run dev` |
+| Your own data feed | `MF_PROVIDER=http` (see [Connect any API](#connect-any-api)) |
+| One production process (API and page together) | `npm run build && npm start` → http://127.0.0.1:8787 |
 
-For production, one process serves the API and the built page:
+## What you get
 
-```bash
-npm run build
-npm start          # http://127.0.0.1:8787 (npm run start:recorded for the recorded day)
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>The board</h3>
+      Sectors and the day's chart on the left; the bullish half over the bearish half on the right. Every bullish line squeezes through a green tunnel, every bearish one through a red tunnel, then fans out to its tile.
+    </td>
+    <td width="50%" valign="top">
+      <h3>A stock in full</h3>
+      Click any tile: 5-minute candles, support and resistance from the option chain, the open-interest zone, the build-up and five checks of conviction, in plain words.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>Real NSE and BSE data</h3>
+      <code>npm run fetch:nse</code> turns the exchanges' public end-of-day F&amp;O files into a session the board replays: real closing chains, real futures open, high, low, close and open interest.
+    </td>
+    <td width="50%" valign="top">
+      <h3>Any API in a few settings</h3>
+      Point the built-in <code>http</code> provider at your service. If its answers have their own shape, one small map file translates them. No adapter to write.
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>Nifty 50 or All F&amp;O</h3>
+      One switch between the NIFTY 50 constituents and every F&amp;O underlying, with sector medians and the spread of the day.
+    </td>
+    <td width="50%" valign="top">
+      <h3>Made to look at</h3>
+      White and dark themes, a phone layout, company logos on every tile, and the Mr. Chartist website's own type.
+    </td>
+  </tr>
+</table>
+
+![A pinned stock: 5-minute candles, support and resistance, the open-interest zone and why it ranks where it does](docs/order-flow-detail.webp)
+
+## How it works
+
 ```
+  a provider              the server                         the page
+┌──────────────┐   ┌──────────────────────────────┐   ┌───────────────────────────┐
+│ demo         │   │ every minute: each name's    │   │ chart · tunnels · tiles   │
+│ NSE archive  │──▶│ option chain → market file   │──▶│ cards · sectors · spread  │
+│ recorded     │   │ on demand: futures, 1-minute │   │ redrawn as each minute    │
+│ any JSON API │   │ candles, kept for a minute   │   │ lands                     │
+│ your broker  │   └──────────────────────────────┘   └───────────────────────────┘
+└──────────────┘          127.0.0.1 only                 reads only its own server
+```
+
+A provider answers three questions (expiries, an option chain, futures). The server reads every underlying, builds one compact market file a minute and serves futures on demand. The page ranks each name by its futures move, reads its build-up and levels, and draws the board. No key ever reaches the browser.
 
 ## Your to-do list
 
@@ -51,7 +123,7 @@ Pick how far you want to go. Each step stands on its own.
 
 **1. See it working (2 minutes, no keys)**
 - [ ] `npm install`
-- [ ] `npm run dev:recorded` and open http://127.0.0.1:5195
+- [ ] `npm run dev:archive` and open http://127.0.0.1:5195
 - [ ] Try the **Nifty 50 / All F&O** switch, the theme switch, and click a card to pin its detail
 
 **2. Replay the latest real session (1 minute, no keys)**
@@ -62,7 +134,7 @@ Pick how far you want to go. Each step stands on its own.
 - [ ] `cp .env.example .env`
 - [ ] Any JSON API: set `MF_PROVIDER=http` and `MF_HTTP_BASE_URL` (see [Connect any API](#connect-any-api)); or Upstox (`upstox`, plus `UPSTOX_ACCESS_TOKEN`); or write a full adapter with [PROVIDERS.md](PROVIDERS.md) and its ready-made prompt for an AI coding assistant
 - [ ] `npm run check:provider` and fix anything marked `FIX`
-- [ ] `npm run dev`: the status line now names your broker
+- [ ] `npm run dev`: the status line now names your source
 
 **4. Keep your own sessions**
 - [ ] After a session, `npm run record -- YYYY-MM-DD` saves it to `data/recorded/`
@@ -184,7 +256,7 @@ Copy `.env.example` to `.env`.
 
 | Variable | Default | Used by |
 |---|---|---|
-| `MF_PROVIDER` | `demo` | Server: which provider feeds the board (`demo`, `recorded`, `upstox`, …) |
+| `MF_PROVIDER` | `demo` | Server: which provider feeds the board (`demo`, `archive`, `recorded`, `http`, `upstox`, …) |
 | `MF_RECORDED_DATE` | newest | Server: the recorded day to replay |
 | `MF_ARCHIVE_DATE` | newest | Server: the archive day to replay (`npm run fetch:nse` builds them) |
 | `MF_HTTP_BASE_URL` | | `http` provider: your API (see [Connect any API](#connect-any-api) for the other `MF_HTTP_*` settings) |
@@ -282,6 +354,8 @@ Third-party parts (logos, fonts, recorded data, dependencies) keep their own ter
 
 ## About
 
-Order Flow is made by **Mr. Chartist**, who builds charting and market-analysis tools for Indian traders.
+Order Flow is made by **[Mr. Chartist](https://mrchartist.com)**, who builds charting and market-analysis tools for Indian traders. More free tools: [mrchartist.com/open-source](https://mrchartist.com/open-source).
+
+If Order Flow helps you read the market, **star the repository** and share it with a trader who would like it.
 
 [Website](https://mrchartist.com) · [X](https://x.com/Mr_Chartist) · [YouTube](https://www.youtube.com/mr_chartist) · [Instagram](https://instagram.com/mrchartist) · [LinkedIn](https://www.linkedin.com/in/rohit-mrchartist/) · [GitHub](https://github.com/MrChartist)
