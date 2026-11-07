@@ -247,7 +247,7 @@ export const FlowChart = memo(function FlowChart({ flow, settings, width, height
           {fan.down && <path className="mf-chart__faint is-down" d={fan.down} />}
           {fan.up && <path className="mf-chart__faint is-up" d={fan.up} />}
         </g>
-        <line className="mf-chart__zero" x1={xT0} x2={width} y1={zeroY} y2={zeroY} />
+        <line className="mf-chart__zero" x1={xT0} x2={xT1} y1={zeroY} y2={zeroY} />
         <g className="mf-named">
           {[...named.down, ...named.up].map(stock => (
             <path key={stock.symbol} className={`mf-chart__bold is-${toneOf(stock)}`} data-sym={stock.symbol} d={paths.get(stock.symbol)} />

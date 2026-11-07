@@ -30,7 +30,7 @@ interface FlowStatusProps {
 export function FlowStatus({ flow, at, loading, error, provider, futuresRead, futuresTotal, onRescan, now }: FlowStatusProps) {
   const source = provider ? (
     <span className={`mf-status__source${provider.alwaysLive ? ' is-demo' : ''}`}>
-      <i aria-hidden="true" />{provider.id === 'recorded' ? `${provider.label} · replay` : provider.alwaysLive ? `${provider.label} · live` : provider.label}
+      <i aria-hidden="true" />{provider.id === 'recorded' || provider.id === 'archive' ? `${provider.label} · replay` : provider.alwaysLive ? `${provider.label} · live` : provider.label}
     </span>
   ) : null;
   if (!flow) {

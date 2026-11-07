@@ -12,6 +12,10 @@
  * and its spot follows the near-month future minute by minute (scaled by the
  * snapshot's spot-to-future ratio), so the moves on the board are the day's
  * real moves.
+ *
+ * Archive sessions (kind: "archive", from the exchanges' end-of-day bhavcopy)
+ * carry the day's real closing chains and real futures open, high, low, close
+ * and open interest; their 1-minute path is rebuilt between those points.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -24,8 +28,20 @@ const SESSION_MINUTES = 375;
 const REPLAY_FROM = 5;
 const dateLabel = new Intl.DateTimeFormat('en-IN', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'Asia/Kolkata' });
 
-export function createRecordedProvider() {
-  const dir = path.resolve(ROOT, process.env.MF_RECORDED_DIR || 'data/recorded');
+/**
+ * `options` lets the same replay serve another folder of sessions: the
+ * `archive` provider replays data/archive (built by `npm run fetch:nse`).
+ */
+export function createRecordedProvider(universe, options = {}) {
+  const {
+    id = 'recorded',
+    dir: defaultDir = 'data/recorded',
+    dirEnv = 'MF_RECORDED_DIR',
+    dateEnv = 'MF_RECORDED_DATE',
+    label = 'Recorded',
+    hint = 'Record one with `npm run record`',
+  } = options;
+  const dir = path.resolve(ROOT, process.env[dirEnv] || defaultDir);
   let day = null;
   /** symbol → { ratio, near } for scaling the snapshot's spot to each minute. */
   const scale = new Map();
@@ -49,24 +65,24 @@ export function createRecordedProvider() {
   };
 
   const provider = {
-    id: 'recorded',
-    label: 'Recorded session',
+    id,
+    label: `${label} session`,
     alwaysLive: true,
     now,
 
     async init() {
       const files = fs.existsSync(dir) ? fs.readdirSync(dir).filter(f => /^\d{4}-\d{2}-\d{2}\.json\.gz$/.test(f)).sort() : [];
-      if (!files.length) throw new Error(`No recorded sessions in ${path.relative(ROOT, dir) || dir}. Record one with \`npm run record\`, or use MF_PROVIDER=demo.`);
-      const wanted = process.env.MF_RECORDED_DATE;
+      if (!files.length) throw new Error(`No recorded sessions in ${path.relative(ROOT, dir) || dir}. ${hint}, or use MF_PROVIDER=demo.`);
+      const wanted = process.env[dateEnv];
       const file = wanted ? files.find(f => f.startsWith(wanted)) : files.at(-1);
-      if (!file) throw new Error(`No recorded session for ${wanted}. Recorded: ${files.map(f => f.slice(0, 10)).join(', ')}.`);
+      if (!file) throw new Error(`No ${id} session for ${wanted}. Available: ${files.map(f => f.slice(0, 10)).join(', ')}.`);
       day = JSON.parse(gunzipSync(fs.readFileSync(path.join(dir, file))).toString('utf8'));
       if (day.schema !== 1) throw new Error(`${file}: unknown schema ${day.schema}.`);
       for (const [symbol, { chain }] of Object.entries(day.chains)) {
         const last = day.futures[symbol]?.[0]?.candles?.at(-1)?.close;
         scale.set(symbol, last ? chain.spot / last : null);
       }
-      provider.label = `Recorded ${dateLabel.format(openOf(day.date))}`;
+      provider.label = `${label} ${dateLabel.format(openOf(day.date))}`;
     },
 
     async expiries(u) {

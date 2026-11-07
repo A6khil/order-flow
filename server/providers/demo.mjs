@@ -103,13 +103,21 @@ const STOCK_PRICE = {
   SBILIFE: 1850, HDFCLIFE: 760, TATACONSUM: 1150, BAJAJFINSV: 2050, DMART: 4300, IRFC: 125, SUZLON: 58, YESBANK: 21,
 };
 
-/** Real price levels from the newest recorded session (data/recorded), when there is one: the demo then sits near real prices. */
+/**
+ * Real price levels from the newest real session on disk (data/archive, built
+ * from the exchanges' bhavcopy by `npm run fetch:nse`, or data/recorded), when
+ * there is one: the demo then sits near real prices.
+ */
 const RECORDED_PRICE = (() => {
   try {
-    const dir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../data/recorded');
-    const latest = fs.readdirSync(dir).filter(f => /^\d{4}-\d{2}-\d{2}\.json\.gz$/.test(f)).sort().at(-1);
+    const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+    const files = ['data/archive', 'data/recorded'].flatMap(dir => {
+      const full = path.join(root, dir);
+      return fs.existsSync(full) ? fs.readdirSync(full).filter(f => /^\d{4}-\d{2}-\d{2}\.json\.gz$/.test(f)).map(f => path.join(full, f)) : [];
+    });
+    const latest = files.sort((a, b) => path.basename(a).localeCompare(path.basename(b))).at(-1);
     if (!latest) return {};
-    const day = JSON.parse(gunzipSync(fs.readFileSync(path.join(dir, latest))).toString('utf8'));
+    const day = JSON.parse(gunzipSync(fs.readFileSync(latest)).toString('utf8'));
     return Object.fromEntries(Object.entries(day.chains ?? {}).map(([symbol, held]) => [symbol, held.chain?.spot]).filter(([, spot]) => spot > 0));
   } catch {
     return {};

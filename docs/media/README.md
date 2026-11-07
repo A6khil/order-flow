@@ -1,6 +1,6 @@
 # Media kit
 
-Images for announcing and featuring Order Flow (on mrchartist.com, social posts and link previews). All taken from the recorded session of 30 Oct 2026, in the white theme and the Manrope typeface.
+Images for announcing and featuring Order Flow (on mrchartist.com, social posts and link previews). The full-resolution boards are the NSE archive session of 6 Nov 2026 in the website's type (Chartist Sans and Chartist Sans Flex); the link card and the Instagram posts are from the recorded session of 30 Oct 2026.
 
 | File | Size | Use |
 |---|---|---|

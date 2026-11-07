@@ -50,8 +50,9 @@ const log = (...args) => console.log(new Date().toISOString(), ...args);
 const universe = JSON.parse(fs.readFileSync(path.join(ROOT, 'public/underlyings.json'), 'utf8')).underlyings
   .filter(u => u && typeof u.symbol === 'string' && u.lot > 0);
 const bySymbol = new Map(universe.map(u => [u.symbol, u]));
-// `--recorded` (npm run dev:recorded / start:recorded) is a shortcut for MF_PROVIDER=recorded.
-const provider = createProvider(universe, process.argv.includes('--recorded') ? 'recorded' : undefined);
+// `--recorded` (npm run dev:recorded / start:recorded) and `--archive` (npm run dev:archive) are shortcuts for MF_PROVIDER.
+const flagged = ['recorded', 'archive'].find(id => process.argv.includes(`--${id}`));
+const provider = createProvider(universe, flagged);
 const now = () => (provider.now ? provider.now() : Date.now());
 const SCAN_DIR = path.join(DATA_DIR, provider.id);
 

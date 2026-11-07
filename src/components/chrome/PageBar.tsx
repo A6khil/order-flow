@@ -29,6 +29,8 @@ interface PageBarProps {
   label?: string;
   /** False drops the breadcrumb and its ⓘ, leaving only the page's controls. */
   crumbs?: boolean;
+  /** A product wordmark drawn at the start of the bar (Order Flow's title). */
+  brand?: ReactNode;
 }
 
 /** The shared page-level navigation row below the terminal shell. */
@@ -44,6 +46,7 @@ export const PageBar = forwardRef<HTMLElement, PageBarProps>(function PageBar({
   className,
   label = 'Workspace controls',
   crumbs = true,
+  brand,
 }, ref) {
   const parentSegment = parent?.label !== current ? parent : undefined;
   const preview = useWebsitePreviewControls();
@@ -59,6 +62,7 @@ export const PageBar = forwardRef<HTMLElement, PageBarProps>(function PageBar({
 
   return (
     <section ref={ref} className={['ui-pagebar', className].filter(Boolean).join(' ')} aria-label={label}>
+      {brand}
       {crumbs && <nav className="ui-pagebar__crumbs" aria-label="Breadcrumb">
         <ol>
           <li>{homeIsHere ? <span className="ui-pagebar__here">Home</span> : <Link to={homeTo}>Home</Link>}</li>

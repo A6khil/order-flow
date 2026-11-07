@@ -1235,3 +1235,42 @@
   .mf-dg__bold { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; }
   .mf-dg__origin .is-halo { opacity: 0.35; }
 }
+
+/* ── Website finish (mrchartist.com) ─────────────────────────────────────
+   The wordmark in the title bar: Order Flow in Chartist Sans, the accent
+   word in Chartist Serif, the Mr. Chartist dot in wine (the brand mark's
+   only job). A plain desk with no coloured glow, and nothing lifts on hover,
+   as on the website. */
+.ui-flow .ui-flow-pagebar.ui-pagebar::after { content: none; }
+.ui-flow .mf-brand {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+  color: var(--text); text-decoration: none; border-radius: 999px; padding: 4px 10px;
+}
+.ui-flow .mf-brand__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand-wine); flex: none; }
+.ui-flow .mf-brand__name { font: 600 15px/1 var(--font-display); letter-spacing: -0.02em; }
+.ui-flow .mf-brand__name em { font: italic 400 18px/1 var(--font-accent); letter-spacing: 0; color: var(--brand-wine); }
+.ui-flow .mf-brand__by { font: 500 12px/1 var(--font-sans); color: var(--text-muted); padding-left: 8px; border-left: 1px solid var(--line); }
+.ui-flow .mf-brand:focus-visible { outline: 2px solid var(--text); outline-offset: -2px; }
+@media (max-width: 1100px) { .ui-flow .mf-brand__by { display: none; } }
+@media (max-width: 760px) {
+  .ui-flow .mf-brand { position: static; transform: none; padding: 4px 6px; margin-right: auto; }
+  .ui-flow .mf-brand__name { font-size: 14px; }
+  .ui-flow .mf-brand__name em { font-size: 16px; }
+}
+@media (max-width: 420px) { .ui-flow .mf-brand { display: none; } }
+
+.ui-flow.oi-design[data-fit='true'] { background: var(--mac-desk); }
+:root[data-theme='light'] .ui-flow.oi-design { --mac-desk: #F2F2F7; }
+:root[data-theme='dark'] .ui-flow.oi-design { --mac-desk: #000000; }
+.mf-board[data-layout='diagram'] :is(.mf-tall, .mf-dgcard):hover { translate: none; }
+
+.mf-dg__funnel-stop.is-from { stop-color: var(--stage-deep, var(--bg)); stop-opacity: 0; }
+.mf-dg__funnel-stop.is-to { stop-color: var(--stage-deep, var(--bg)); stop-opacity: 1; }
+:root[data-theme='light'] .mf-dg__funnel-stop { stop-color: #F2F2F7; }
+.mf-board[data-layout='diagram'] .mf-dg__funnel { stroke: color-mix(in srgb, var(--text) 8%, transparent); }
+:root[data-theme='light'] .mf-board[data-layout='diagram'] .mf-dg__funnel { stroke: rgb(0 0 0 / .08); }
+/* Progress, focus and the sector medians in ink, never a colour. */
+.ui-flow .mf-status__bar i { background: var(--text); }
+.ui-flow :focus-visible { outline-color: var(--text); }
+.mf-dg__medians line { stroke: var(--text); opacity: 0.14; }

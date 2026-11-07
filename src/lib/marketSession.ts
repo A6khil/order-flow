@@ -1,7 +1,7 @@
 const MARKET_TIME_ZONE = 'Asia/Kolkata';
 export const MARKET_OPEN_MINUTE = 9 * 60 + 15;
 /**
- * SEBI's Closing Auction Session (CAS) became effective on 3 August 2026.
+ * The exchanges' Closing Auction Session (CAS) took effect on 3 August 2026.
  * Cash price discovery runs from 15:15 to 15:35 and equity derivatives keep
  * trading until 15:40. `MARKET_CLOSE_MINUTE` therefore means the close of the
  * option-chain session, not the end of normal cash-market trading.

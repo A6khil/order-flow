@@ -6,8 +6,6 @@ import { UiIconProvider } from '@/assets/svg';
 import { installUiTooltips } from '@/lib/uiTooltips';
 import { loadUnderlyings } from './lib/underlyings';
 import { dismissBootSplash, settleWithin } from './lib/bootstrap';
-// The board's face: Manrope, words and figures alike (see ui-typography.css).
-import '@fontsource-variable/manrope';
 import '@/styles/oi-design-tokens.css';
 import '@/styles/index.css';
 import '@/styles/strike-filter.css';
@@ -82,6 +80,8 @@ import '@/styles/ui-tool-rhythm.css';
 import '@/styles/ui-finish-pass.css';
 import '@/styles/ui-box-system.css';
 import '@/styles/ui-tooltip.css';
+// Last: the mrchartist.com type and colour (fonts, ink, up/down, borders).
+import '@/styles/website-brand.css';
 
 // The theme: the reader's saved choice, else light.
 let theme: 'light' | 'dark' = 'light';

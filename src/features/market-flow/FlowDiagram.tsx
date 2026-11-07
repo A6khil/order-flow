@@ -376,7 +376,18 @@ function DiagramBody({ flow, settings, status, W, H }: FlowDiagramProps & { W: n
       <svg className="mf-dg__under mf-dg__fan" width={W} height={H} aria-hidden="true">
         <g>
           <SectorLines sectors={flow.sectors} yOf={yOf} x0={xT0 + pillW + 8} x1={xT1} />
-          {funnel && <path className="mf-dg__funnel" d={funnel} />}
+          {funnel && (
+            <>
+              {/* The funnel fades in from the chart, so the flat names pour into it rather than hit a grey slab. */}
+              <defs>
+                <linearGradient id={`${pathId}-funnel`} x1={xT1 - 40} x2={gateR} y1="0" y2="0" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" className="mf-dg__funnel-stop is-from" />
+                  <stop offset="1" className="mf-dg__funnel-stop is-to" />
+                </linearGradient>
+              </defs>
+              <path className="mf-dg__funnel" d={funnel} fill={`url(#${pathId}-funnel)`} style={{ fill: `url(#${pathId}-funnel)` }} />
+            </>
+          )}
           <path className="mf-dg__faint is-flat" d={fan.flat} />
           <path className="mf-dg__faint is-down" d={fan.down} />
           <path className="mf-dg__faint is-up" d={fan.up} />

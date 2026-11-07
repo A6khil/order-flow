@@ -7,6 +7,20 @@ Order Flow's page talks only to its own server. The server gets every number fro
 - A real broker example: [`server/providers/upstox.mjs`](server/providers/upstox.mjs)
 - The starting point: [`server/providers/template.mjs`](server/providers/template.mjs)
 
+## The quick way: any API, no code
+
+Before you write an adapter, try the built-in `http` provider. It connects to any JSON API with settings and, if your API's shapes differ from ours, one small map file with up to three functions:
+
+```bash
+MF_PROVIDER=http
+MF_HTTP_BASE_URL=https://api.example.com
+MF_HTTP_CHAIN=/v1/optionchain?underlying={symbol}&expiry={expiry}
+MF_HTTP_MAP=./my-api-map.mjs          # copy examples/http-map.example.mjs
+npm run check:provider
+```
+
+The full list of settings is in the README, under [Connect any API](README.md#connect-any-api); `node examples/http-api-server.mjs` serves the exact shapes Order Flow expects. Write a full adapter (below) when your broker needs an instrument map, a login flow or batching that a plain URL cannot express.
+
 ## What a provider must return
 
 | Method | Called | Returns |

@@ -48,6 +48,15 @@ const UNIVERSES: Array<{ value: FlowUniverse; label: string; title: string }> = 
   { value: 'fno', label: 'All F&O', title: 'Every F&O underlying: stocks and indices' },
 ];
 
+/** The wordmark: Order Flow in the website's heading face, the Mr. Chartist dot, and who made it. */
+const BRAND = (
+  <a className="mf-brand" href="https://mrchartist.com/open-source/order-flow" target="_blank" rel="noreferrer" aria-label="Order Flow by Mr. Chartist">
+    <span className="mf-brand__dot" aria-hidden="true" />
+    <span className="mf-brand__name">Order <em>Flow</em></span>
+    <span className="mf-brand__by">by Mr. Chartist</span>
+  </a>
+);
+
 export function MarketFlowPage({ universe }: MarketFlowPageProps) {
   const [scope, setScope] = useState<FlowUniverse>(loadUniverse);
   const pageRef = useRef<HTMLDivElement>(null);
@@ -73,7 +82,7 @@ export function MarketFlowPage({ universe }: MarketFlowPageProps) {
   return (
     <div className="ui-flow oi-design" data-window="day" data-universe={scope} data-layout={layout} data-fit={fits ? 'true' : undefined} ref={pageRef}>
       <h1 className="is-visually-hidden">Order Flow</h1>
-      <PageBar current="Order Flow" crumbs={false} className="oi-design ui-flow-pagebar">{pageActions}</PageBar>
+      <PageBar current="Order Flow" crumbs={false} className="oi-design ui-flow-pagebar" brand={BRAND}>{pageActions}</PageBar>
       <FlowBoard key={scope} flow={flow} settings={CHART} layout={layout}
         status={<FlowStatus flow={flow} at={market?.at ?? null} loading={loading} error={error} provider={provider} futuresRead={futuresRead} futuresTotal={futuresTotal} onRescan={rescan} />} />
     </div>
