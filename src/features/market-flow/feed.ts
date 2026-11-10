@@ -10,7 +10,8 @@ import { parseMarketFile, type ContractMarket } from '../options-scanner/contrac
  * futures. Nothing here knows which broker (or the demo) is behind it.
  */
 
-const API = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '');
+// The server's API sits beside the page: under Vite's `base` (MF_BASE_PATH at build time) unless VITE_API_BASE names another origin.
+const API = (import.meta.env.VITE_API_BASE || import.meta.env.BASE_URL || '').replace(/\/$/, '');
 
 export interface FeedStatus {
   provider: { id: string; label: string; alwaysLive: boolean };

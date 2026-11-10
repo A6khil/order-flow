@@ -17,6 +17,15 @@
  *
  *   PORT=8787  HOST=127.0.0.1  MF_PROVIDER=demo  MF_DATA_DIR=server/data
  *
+ * Hosting (all optional): MF_BASE_PATH=/orderflow serves everything under that
+ * path (build the page with the same variable); MF_UNIVERSE=NIFTY,RELIANCE,...
+ * or MF_UNIVERSE_FILE (JSON array or one symbol per line) limits the board to
+ * those rows of public/underlyings.json; MF_BUILD_EVERY_S (60) and
+ * MF_IDLE_BUILD_EVERY_S (3600) set how often the market file is rebuilt in and
+ * out of market hours; MF_FUTURES_KEEP_S (60) how long a futures read is kept;
+ * MF_WORKERS (8) how many underlyings are read at once; MF_AUTH_PROXY=1 says a
+ * proxy in front signs people in (silences the no-password warning).
+ *
  * Security. It listens on this machine only (HOST=127.0.0.1) unless told
  * otherwise. MF_BASIC_AUTH=user:password puts every route behind a password.
  * Only GET and HEAD; only the routes below; the futures route reads only the
@@ -41,14 +50,40 @@ const CORS_ORIGIN = process.env.MF_CORS_ORIGIN || '';
 if (AUTH && !/^[^:]+:.{8,}$/.test(AUTH)) throw new Error('MF_BASIC_AUTH must be user:password, with a password of at least 8 characters.');
 const DATA_DIR = path.resolve(ROOT, process.env.MF_DATA_DIR || 'server/data');
 const DIST = path.join(ROOT, 'dist');
-const WORKERS = 8;
+const envNumber = (name, fallback) => (Number(process.env[name]) > 0 ? Number(process.env[name]) : fallback);
+const WORKERS = envNumber('MF_WORKERS', 8);
 /** A futures read is kept this long: the page asks again every two minutes. */
-const FUTURES_KEEP_MS = 60_000;
+const FUTURES_KEEP_MS = envNumber('MF_FUTURES_KEEP_S', 60) * 1000;
+const BUILD_EVERY_MS = envNumber('MF_BUILD_EVERY_S', 60) * 1000;
+const IDLE_BUILD_EVERY_MS = envNumber('MF_IDLE_BUILD_EVERY_S', 3600) * 1000;
+/** '' or '/orderflow': the path the page and the API are served under. */
+const BASE_PATH = (process.env.MF_BASE_PATH || '').replace(/\/+$/, '');
+if (BASE_PATH && !/^(\/[A-Za-z0-9._-]+)+$/.test(BASE_PATH)) throw new Error('MF_BASE_PATH must look like /orderflow');
 
 const log = (...args) => console.log(new Date().toISOString(), ...args);
 
-const universe = JSON.parse(fs.readFileSync(path.join(ROOT, 'public/underlyings.json'), 'utf8')).underlyings
-  .filter(u => u && typeof u.symbol === 'string' && u.lot > 0);
+const registry = JSON.parse(fs.readFileSync(path.join(ROOT, 'public/underlyings.json'), 'utf8'));
+const wanted = readUniverse();
+const universe = registry.underlyings
+  .filter(u => u && typeof u.symbol === 'string' && u.lot > 0)
+  .filter(u => !wanted || wanted.has(u.symbol));
+/** The registry the page reads: the whole file, or only the MF_UNIVERSE rows. */
+const registryJson = wanted ? JSON.stringify({ ...registry, count: universe.length, underlyings: universe }) : null;
+
+/** MF_UNIVERSE (comma or space separated) or MF_UNIVERSE_FILE (JSON array, or one per line): null = everything. */
+function readUniverse() {
+  let raw = process.env.MF_UNIVERSE || '';
+  if (!raw && process.env.MF_UNIVERSE_FILE) {
+    const text = fs.readFileSync(path.resolve(process.env.MF_UNIVERSE_FILE), 'utf8');
+    raw = text.trim().startsWith('[') ? JSON.parse(text).join(',') : text;
+  }
+  const symbols = raw.split(/[\s,]+/).map(s => s.trim().toUpperCase()).filter(Boolean);
+  if (!symbols.length) return null;
+  const known = new Set(registry.underlyings.map(u => u?.symbol));
+  const missing = symbols.filter(s => !known.has(s));
+  if (missing.length) console.log(new Date().toISOString(), `MF_UNIVERSE: not in public/underlyings.json, left out: ${missing.join(', ')}`);
+  return new Set(symbols);
+}
 const bySymbol = new Map(universe.map(u => [u.symbol, u]));
 // `--recorded` (npm run dev:recorded / start:recorded) and `--archive` (npm run dev:archive) are shortcuts for MF_PROVIDER.
 const flagged = ['recorded', 'archive'].find(id => process.argv.includes(`--${id}`));
@@ -148,10 +183,10 @@ function pruneOldDays(today) {
   }
 }
 
-/** Live (in session, or a provider that is always live): every minute, a few seconds past the boundary. Otherwise hourly. */
+/** Live (in session, or a provider that is always live): every minute (MF_BUILD_EVERY_S), a few seconds past the boundary. Otherwise hourly (MF_IDLE_BUILD_EVERY_S). */
 function schedule() {
   const live = provider.alwaysLive || isMarketSessionTime(Date.now());
-  const wait = live ? 60_000 - (Date.now() % 60_000) + 3_000 : 60 * 60_000;
+  const wait = live ? BUILD_EVERY_MS - (Date.now() % BUILD_EVERY_MS) + 3_000 : IDLE_BUILD_EVERY_MS;
   setTimeout(async () => { await build(); schedule(); }, wait);
 }
 
@@ -240,6 +275,12 @@ async function handle(req, res) {
     return send(res, 400, { error: 'Bad request.' });
   }
   if (p.includes('\0')) return send(res, 400, { error: 'Bad request.' });
+  if (BASE_PATH) {
+    // Everything lives under MF_BASE_PATH; the bare path gets its trailing slash.
+    if (p === BASE_PATH) return send(res, 301, '', 'text/plain', { Location: `${BASE_PATH}/${url.search}` });
+    if (!p.startsWith(`${BASE_PATH}/`)) return send(res, 404, { error: 'Not found.' });
+    p = p.slice(BASE_PATH.length);
+  }
 
   if (p === '/api/status') {
     return send(res, 200, {
@@ -277,7 +318,10 @@ async function handle(req, res) {
     }
   }
 
-  if (p === '/underlyings.json') return serveFile(res, path.join(ROOT, 'public/underlyings.json'), 'public, max-age=3600');
+  if (p === '/underlyings.json') {
+    if (registryJson) return send(res, 200, registryJson, 'application/json', { 'Cache-Control': 'public, max-age=3600' });
+    return serveFile(res, path.join(ROOT, 'public/underlyings.json'), 'public, max-age=3600');
+  }
 
   // The built page; any other path is the page itself (its router is in memory).
   if (fs.existsSync(DIST)) {
@@ -296,8 +340,8 @@ try {
 
 const LOOPBACK = ['127.0.0.1', '::1', 'localhost'];
 server.listen(PORT, HOST, async () => {
-  log(`Order Flow on http://${HOST.includes(':') ? `[${HOST}]` : HOST}:${PORT} · provider: ${provider.label} (${provider.id}) · ${universe.length} underlyings${AUTH ? ' · password on' : ''}`);
-  if (!LOOPBACK.includes(HOST) && !AUTH) log('WARNING: listening beyond this machine with no password. Set MF_BASIC_AUTH=user:password, or put the server behind a proxy that signs people in.');
+  log(`Order Flow on http://${HOST.includes(':') ? `[${HOST}]` : HOST}:${PORT}${BASE_PATH}/ · provider: ${provider.label} (${provider.id}) · ${universe.length} underlyings${AUTH ? ' · password on' : ''}`);
+  if (!LOOPBACK.includes(HOST) && !AUTH && process.env.MF_AUTH_PROXY !== '1') log('WARNING: listening beyond this machine with no password. Set MF_BASIC_AUTH=user:password, or put the server behind a proxy that signs people in.');
   try {
     await provider.init?.();
     state.ready = true;

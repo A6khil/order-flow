@@ -25,7 +25,7 @@ export interface UnderlyingLogo {
   via?: 'commons' | 'site-icon';
 }
 
-const BASE = '/brand/underlyings';
+const BASE = `${import.meta.env.BASE_URL}brand/underlyings`;
 
 let manifest: Record<string, UnderlyingLogo> | null = null;
 let inflight: Promise<Record<string, UnderlyingLogo>> | null = null;

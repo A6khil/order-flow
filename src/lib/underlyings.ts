@@ -103,7 +103,7 @@ export function loadUnderlyings(): Promise<Underlying[]> {
         // reloads. Only transport failures and
         // 5xx/429 are retried; a 404 is a deploy problem and repeating it just
         // delays the error.
-        const res = await fetchWithRetry('/underlyings.json');
+        const res = await fetchWithRetry(`${import.meta.env.BASE_URL}underlyings.json`);
         if (!res.ok) throw new Error(`underlyings.json: HTTP ${res.status}`);
         return res.json() as Promise<{ underlyings?: Underlying[]; themes?: ThemeDirectory }>;
       })();

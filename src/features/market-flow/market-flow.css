@@ -1250,6 +1250,8 @@
 .ui-flow .mf-brand__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand-wine); flex: none; }
 .ui-flow .mf-brand__name { font: 600 15px/1 var(--font-display); letter-spacing: -0.02em; }
 .ui-flow .mf-brand__name em { font: italic 400 18px/1 var(--font-accent); letter-spacing: 0; color: var(--brand-wine); }
+.ui-flow .mf-home { font: 500 13px/1 var(--font-sans); color: var(--text-muted); text-decoration: none; padding: 7px 10px; border: 1px solid var(--line); border-radius: 999px; white-space: nowrap; }
+.ui-flow .mf-home:hover { color: inherit; }
 .ui-flow .mf-brand__by { font: 500 12px/1 var(--font-sans); color: var(--text-muted); padding-left: 8px; border-left: 1px solid var(--line); }
 .ui-flow .mf-brand:focus-visible { outline: 2px solid var(--text); outline-offset: -2px; }
 @media (max-width: 1100px) { .ui-flow .mf-brand__by { display: none; } }

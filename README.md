@@ -267,6 +267,15 @@ Copy `.env.example` to `.env`.
 | `MF_DATA_DIR` | `server/data` | Server: today's minute snapshots, for the 15m and 1h windows |
 | `UPSTOX_ACCESS_TOKEN` | | Upstox provider |
 | `VITE_API_BASE` | same origin | Page: only when the page is hosted apart from the server |
+| `MF_BASE_PATH` | | Page build **and** server: serve everything under a path, e.g. `/orderflow` (build the page with the same value) |
+| `MF_UNIVERSE` / `MF_UNIVERSE_FILE` | all rows | Server: only these symbols of `public/underlyings.json` (comma list, or a file: JSON array or one per line); the page gets the same list |
+| `MF_BUILD_EVERY_S` / `MF_IDLE_BUILD_EVERY_S` | `60` / `3600` | Server: market-file rebuild cadence in / out of market hours |
+| `MF_FUTURES_KEEP_S` | `60` | Server: how long a futures answer is kept |
+| `MF_WORKERS` | `8` | Server: underlyings read at once |
+| `MF_AUTH_PROXY` | | Server: `1` when a proxy in front signs people in (no no-password warning) |
+| `VITE_HOME_URL` / `VITE_HOME_LABEL` | | Page build: a link back to a host app, beside a link to the licence |
+
+A `Dockerfile` builds the page and runs the server (`--build-arg MF_BASE_PATH=/orderflow` to host it under a path).
 
 ## Server API
 

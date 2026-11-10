@@ -57,6 +57,10 @@ const BRAND = (
   </a>
 );
 
+/** When the board is hosted inside another app, VITE_HOME_URL (set at build time) puts a way back to it in the bar. */
+const HOME_URL: string = import.meta.env.VITE_HOME_URL || '';
+const HOME_LABEL: string = import.meta.env.VITE_HOME_LABEL || 'Dashboard';
+
 export function MarketFlowPage({ universe }: MarketFlowPageProps) {
   const [scope, setScope] = useState<FlowUniverse>(loadUniverse);
   const pageRef = useRef<HTMLDivElement>(null);
@@ -74,6 +78,10 @@ export function MarketFlowPage({ universe }: MarketFlowPageProps) {
 
   const pageActions = (
     <>
+      {HOME_URL ? <>
+        <a className="mf-home" href={HOME_URL} title={`Back to ${HOME_LABEL}`}>← {HOME_LABEL}</a>
+        <a className="mf-home" href={`${import.meta.env.BASE_URL}LICENSE.txt`} target="_blank" rel="noreferrer" title="Order Flow © Mr. Chartist · PolyForm Noncommercial 1.0.0 · personal use">Licence</a>
+      </> : null}
       <CapsuleSegmented options={UNIVERSES} value={scope} onChange={setScope} ariaLabel="Underlyings" groupId="flow-universe" size="page" className="ui-flow-universe" />
       <ThemeToggle onChange={theme => applyTheme(theme)} size="md" className="ui-flow-theme" />
     </>
